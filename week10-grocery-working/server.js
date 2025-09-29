@@ -51,19 +51,15 @@ app.post('/groceryInventory', async (req, res) => {
     const result = await db
       .collection(`${process.env.MONGO_COLLECTION}`)
       .insertOne(req.body);
-    if (req.accepts('html')) {
-      // Browser form submission - redirect to the list page
-      res.redirect('/groceryInventory');
-    } else {
-      // REST client request - send JSON
-      res.status(201).json({
-        success: true,
-        message: 'Grocery created successfully!',
-        insertedId: result.insertedId,
-        redirectTo: '/groceryInventory',
-        data: { _id: result.insertedId, ...req.body },
-      });
-    }
+
+    // Always return JSON since the form uses fetch
+    res.status(201).json({
+      success: true,
+      message: 'Grocery created successfully!',
+      insertedId: result.insertedId,
+      redirectTo: '/groceryInventory',
+      data: { _id: result.insertedId, ...req.body },
+    });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
