@@ -60,6 +60,7 @@ app.post('/groceryInventory', async (req, res) => {
         success: true,
         message: 'Grocery created successfully!',
         insertedId: result.insertedId,
+        redirectTo: '/groceryInventory',
         data: { _id: result.insertedId, ...req.body },
       });
     }
