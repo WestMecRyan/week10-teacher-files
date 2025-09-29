@@ -1,0 +1,8 @@
+# .env
+PORT=3000
+MONGO_USER=grocery_db_user
+MONGO_PASS=add_your_pass
+MONGO_CLUSTER=cluster0.9tcln.mongodb.net
+MONGO_COLLECTION=grocery_inventory
+MONGO_DB=week10_12PM_WestMART
+NODE_ENV=development
