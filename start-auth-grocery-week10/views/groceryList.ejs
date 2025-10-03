@@ -1,0 +1,99 @@
+<!-- views/groceryList.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grocery List</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1><i class="bi bi-basket me-2"></i>Grocery List</h1>
+      <% if (groceries && groceries.length > 0) { %>
+      <div class="row">
+        <% groceries.forEach(function(grocery) { %>
+        <div class="col-md-6 col-lg-4 mb-3" id="grocery-<%= grocery._id %>">
+          <div class="card">
+            <div class="card-body">
+              <div class="grocery-display" id="display-<%= grocery._id %>">
+                <h5 class="card-title">
+                  <i class="bi bi-apple me-2"></i>
+                  <%= grocery.groceryName %>
+                </h5>
+                <% if (grocery._id) { %>
+                <div class="d-flex gap-2">
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    onclick="editGrocery('<%= grocery._id %>', '<%= grocery.fruitName %>')"
+                  >
+                    <i class="bi bi-pencil me-1"></i>Edit
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    onclick="deleteGrocery('<%= grocery._id %>')"
+                  >
+                    <i class="bi bi-trash me-1"></i>Delete
+                  </button>
+                </div>
+                <% } %>
+              </div>
+              <div
+                class="grocery-edit"
+                id="edit-<%= grocery._id %>"
+                style="display: none"
+              >
+                <div class="mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="fruitName-<%= grocery._id %>"
+                    value="<%= grocery.fruitName %>"
+                    placeholder="Fruit Name"
+                  />
+                </div>
+                <div class="d-flex gap-2">
+                  <button
+                    class="btn btn-sm btn-success"
+                    onclick="updateGrocery('<%= grocery._id %>')"
+                  >
+                    <i class="bi bi-check me-1"></i>Save
+                  </button>
+                  <button
+                    class="btn btn-sm btn-secondary"
+                    onclick="cancelEdit('<%= grocery._id %>')"
+                  >
+                    <i class="bi bi-x me-1"></i>Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <% } else { %>
+      <div class="alert alert-info text-center">
+        <i class="bi bi-info-circle me-2"></i>
+        No grocery items found
+      </div>
+      <% } %>
+      <div class="text-center mt-4">
+        <a href="/" class="btn btn-primary">
+          <i class="bi bi-plus-circle me-2"></i>
+          Add New Grocery Item
+        </a>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/groceryActions.js"></script>
+  </body>
+</html>

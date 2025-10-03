@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Registration</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .register-container {
+      max-width: 500px;
+      width: 100%;
+    }
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+    .card-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 15px 15px 0 0 !important;
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <div class="card">
+      <div class="card-header text-center">
+        <i class="bi bi-person-plus-fill fs-1 mb-3 d-block"></i>
+        <h2 class="mb-0">Admin Registration</h2>
+      </div>
+      <div class="card-body p-4">
+        <div id="error-message" class="alert alert-danger d-none" role="alert"></div>
+        <div id="success-message" class="alert alert-success d-none" role="alert"></div>
+        
+        <form id="register-form">
+          <div class="mb-3">
+            <label for="username" class="form-label">
+              <i class="bi bi-person-circle me-1"></i>Username
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="username" 
+              name="username" 
+              required
+              minlength="3"
+              autocomplete="username">
+            <div class="form-text">At least 3 characters</div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="email" class="form-label">
+              <i class="bi bi-envelope me-1"></i>Email
+            </label>
+            <input 
+              type="email" 
+              class="form-control" 
+              id="email" 
+              name="email" 
+              required
+              autocomplete="email">
+          </div>
+          
+          <div class="mb-3">
+            <label for="password" class="form-label">
+              <i class="bi bi-key me-1"></i>Password
+            </label>
+            <input 
+              type="password" 
+              class="form-control" 
+              id="password" 
+              name="password" 
+              required
+              minlength="6"
+              autocomplete="new-password">
+            <div class="form-text">At least 6 characters</div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">
+              <i class="bi bi-key-fill me-1"></i>Confirm Password
+            </label>
+            <input 
+              type="password" 
+              class="form-control" 
+              id="confirmPassword" 
+              name="confirmPassword" 
+              required
+              autocomplete="new-password">
+          </div>
+          
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="bi bi-person-check me-2"></i>Register
+            </button>
+          </div>
+        </form>
+        
+        <div class="text-center mt-3">
+          <small class="text-muted">
+            Already have an account? 
+            <a href="/admin/login">Login here</a>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const errorDiv = document.getElementById('error-message');
+      const successDiv = document.getElementById('success-message');
+      errorDiv.classList.add('d-none');
+      successDiv.classList.add('d-none');
+      
+      const formData = new FormData(e.target);
+      const password = formData.get('password');
+      const confirmPassword = formData.get('confirmPassword');
+      
+      // Validate passwords match
+      if (password !== confirmPassword) {
+        errorDiv.textContent = 'Passwords do not match';
+        errorDiv.classList.remove('d-none');
+        return;
+      }
+      
+      const data = {
+        username: formData.get('username'),
+        email: formData.get('email'),
+        password: password
+      };
+      
+      try {
+        const response = await fetch('/admin/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          successDiv.textContent = result.message;
+          successDiv.classList.remove('d-none');
+          
+          // Redirect to login after 2 seconds
+          setTimeout(() => {
+            window.location.href = result.redirectTo;
+          }, 2000);
+        } else {
+          errorDiv.textContent = result.message || 'Registration failed';
+          errorDiv.classList.remove('d-none');
+        }
+      } catch (error) {
+        errorDiv.textContent = 'An error occurred. Please try again.';
+        errorDiv.classList.remove('d-none');
+      }
+    });
+  </script>
+</body>
+</html>
